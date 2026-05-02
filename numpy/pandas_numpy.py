@@ -74,3 +74,49 @@ print(f"max değerin indeksi {np.argmax(arr)}")
 arr = np.array([1,2,3,4,5])
 print(f"Kümülatif toplam:  {np.cumsum(arr)}")
 print(f"Kümülatif çarpım: {np.cumprod(arr)}")
+
+"""## Şekil İşlemleri"""
+
+arr = np.arange(12)
+print(arr)
+reshaped = arr.reshape(3,4)
+print(reshaped)
+
+from re import A
+arr = np.array([[1,2,3],[4,5,6]])
+arr
+print(f"ravel: {np.ravel(arr)}") #view döner
+print(f"flatten: {arr.flatten()}") #copy döner
+
+arr = np.array([[1,2,3],[4,5,6]])
+arr
+print(f"transpose: {arr.transpose()}")
+
+arr = np.array([1,2,3])
+print(arr.shape)
+expanded = np.expand_dims(arr,axis=0) # satır ekle
+print(expanded.shape)
+squeezed = np.squeeze(expanded)
+print(squeezed.shape)
+
+#genel birleştirme
+a = np.array([[1,2],[3,4]])
+b = np.array([[5,6]])
+
+concat = np.concatenate((a,b),axis=0)
+print(concat)
+
+#dikey birleştirme
+vstacked = np.vstack((a,b))
+vstacked
+
+#yatay birleştirme
+hstacked = np.hstack((a,np.array([[7,8],[9,10]])))
+hstacked
+
+"""## dizileri ayırma"""
+
+arr = np.arange(10)
+print(f"split:{np.split(arr,5)}") #5 eşit parçaya ayır
+
+print(f"split:{np.array_split(arr,4)}") #4 parçaya ayır
