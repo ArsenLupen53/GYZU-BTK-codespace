@@ -120,3 +120,140 @@ arr = np.arange(10)
 print(f"split:{np.split(arr,5)}") #5 eşit parçaya ayır
 
 print(f"split:{np.array_split(arr,4)}") #4 parçaya ayır
+
+"""## Rastgele Sayılar"""
+
+#0-1 arasında rastgele sayı üret (uniform dağılım)
+print(f"rand: \n {np.random.rand(3,3)}")
+
+# normal dağılıma göre rastgele sayı üret
+print(f"randn: \n {np.random.randn(3,3)}")
+
+# belirli bir aralıkta rastgele sayı üret
+print(f"randint: \n {np.random.randint(1,10,(3,3))}")
+
+#belirli kümeden rastgele seçmek
+arr = np.array([1,2,3,4,5])
+print(f"tek seçim: \n {np.random.choice(arr)}")
+print(f"çoklu seçim: \n {np.random.choice(arr,size=3,replace=False)}") # replace fonksiyonu aynı karakter seçip seçmediğini belirler
+
+#permütasyon ve shuffle
+arr = np.array([1,2,3,4,5])
+print(f"permütasyon: \n {np.random.permutation(arr)}") #yeni dizi döndürür
+np.random.shuffle(arr) #diziyi yerinde karıştırır
+print(f"shuffle: \n {arr}")
+
+#olasılık dağılımları
+binom = np.random.binomial(n=10,p=0.5,size=5)
+print(binom)
+poisson = np.random.poisson(lam=5,size=5)
+print(poisson)
+normal = np.random.normal(loc=0,scale=1,size=5)
+print(normal)
+uniform = np.random.uniform(0,1,5)
+print(uniform)
+
+#Seed: rastgele sayıların tekrarlanabilir olmasını sağlar.
+np.random.seed(42) #bundan sonraki rastgelelikler her çalıştığında farklı değer döndürmez
+np.random.randint(0,10,15)
+
+"""## İstatistik ve Veri Analizi"""
+
+data = np.array([12,1,23,31,123,4,1])
+from scipy import stats
+print(f"mod: {stats.mode(data,keepdims=True).mode[0]}")
+print(f"ortalama: {np.mean(data)}")
+print(f"medyan: {np.median(data)}")
+print(f"varyans: {np.var(data)}")
+print(f"standart sapma: {np.std(data)}")
+
+print(f"25.percentil: {np.percentile(data,25)}")
+print(f"75.percentil: {np.percentile(data,75)}")
+
+print(f"0.25.percentil: {np.quantile(data,0.25)}")
+print(f"0.75.percentil: {np.quantile(data,0.75)}")
+
+#korelasyon ve kovaryans
+
+x = np.array([1,2,3,4,5])
+y = np.array([2,4,6,8,10])
+
+print(f"korelasyon: \n{np.corrcoef(x,y)}")
+print(f"kovaryans: \n{np.cov(x,y)}")
+
+"""## Lineer Cebir"""
+
+a = np.array([1,2,3])
+b = np.array([4,5,6])
+
+print(f"dot: {np.dot(a,b)}")
+print(f"vdot: {np.vdot(a,b)}")
+
+a = np.array([[1,2],[3,4]])
+b = np.array([[5,6],[7,8]])
+print(f"matmul: \n {np.matmul(a,b)}")
+
+a = np.array([[1,2],[3,4]])
+det = np.linalg.det(a)
+det
+
+a = np.array([[1,2],[3,4]])
+inv_a = np.linalg.inv(a)
+inv_a
+
+a = np.array([[1,2],[3,4]])
+print(f"rank: {np.linalg.matrix_rank(a)}")
+
+a = np.array([[1,2],[3,4]])
+eigenvalues, eigenvectors = np.linalg.eig(a)
+print(f"eigenvalues: {eigenvalues}")
+print(f"eigenvectors: {eigenvectors}")
+
+#lineer denklem çözümü
+"""
+2x+y=5
+x-y=1
+"""
+a = np.array([[2,1],[1,-1]])
+b = np.array([5,1])
+solution = np.linalg.solve(a,b)
+solution
+
+"""## Maskeler ve Koşullu İşlemler"""
+
+# boolean diziler
+
+arr = np.array([10,20,30,40,50])
+mask = arr > 25
+print(mask)
+print(arr[mask])
+
+#where komutuna göre seçim
+arr = np.array([10,20,30,40,50])
+
+result = np.where(arr < 25,0,arr)
+result
+
+arr = np.array([10,20,30,40,50])
+
+conditions = [arr < 20, arr < 40, arr >= 40]
+choices = ["küçük","orta","büyük"]
+
+labels = np.select(conditions,choices,default="bilinmiyor")
+labels
+
+#non zero
+arr = np.array([10,20,30,40,50])
+print(np.nonzero(arr)) #0 olmayanların indeksini döndürüyor
+
+# any ve all
+arr = np.array([10,20,30,40,50])
+print(f"Herhangi biri 30dan büyük mü {np.any(arr > 30)}")
+print(f"Tüm değerler 30dan büyük mü {np.all(arr > 30)}")
+
+"""## Dosya işlemleri"""
+
+arr = np.array([10,20,30,40,50])
+np.save("data.npy",arr)
+loaded_arr=np.load("data.npy")
+loaded_arr
