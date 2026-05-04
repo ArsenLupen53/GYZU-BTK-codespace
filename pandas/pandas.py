@@ -15,7 +15,7 @@ import pandas as pd
 s = pd.Series([10,20,30,40],index = ["a","b","c","d"])
 s
 
-# dataframe iki boyutludur
+# dataframeler iki boyutludur
 data = {
     "isim": ["ali","ayşe","mehmet"],
     "yas": [25,30,22],
