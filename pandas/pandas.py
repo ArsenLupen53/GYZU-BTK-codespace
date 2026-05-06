@@ -139,3 +139,22 @@ print(df["yas"].nunique())
 print(df.value_counts())
 
 df["yas"].value_counts()
+
+"""## Veri Seçme ve Filtreleme"""
+
+data = {
+    "isim":["ali","ayşe","mehmet","zeynep","burak"],
+    "yas":[25,30,22,28,27],
+    "not":[80,90,75,95,85]
+}
+df = pd.DataFrame(data)
+print(f"Notu 85 den büyük olanlar: \n {df[df["not"] > 85]}")
+print(f"Yaşı 25 olanlar: \n {df[df["yas"] == 25]}")
+
+#boolean maskeler
+mask = df["not"] > 85
+df[mask]
+
+#çoklu koşullar
+# 50 <= not <= 90
+print(f"Orta başarı: \n {df[(df["not"] >= 50) & (df["not"] <= 90)]}")
