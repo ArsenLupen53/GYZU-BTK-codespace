@@ -158,3 +158,117 @@ df[mask]
 #çoklu koşullar
 # 50 <= not <= 90
 print(f"Orta başarı: \n {df[(df["not"] >= 50) & (df["not"] <= 90)]}")
+
+"""## Veri Temizleme"""
+
+data = {
+    "isim":["ali","ayşe","mehmet","zeynep","burak"],
+    "yas":[25,None,22,None,27],
+    "not":[80,90,None,95,85]
+}
+df = pd.DataFrame(data)
+df.isnull()
+
+df.dropna() #silme
+
+df.fillna(0) #eksik veri doldurma
+
+df["yas"].fillna(df["yas"].mean())
+
+#yinelenen veriler
+data = {
+    "isim":["ali","ayşe","ali","zeynep","burak"],
+    "yas":[25,None,25,None,27],
+    "not":[80,90,80,None,85]
+}
+df = pd.DataFrame(data)
+df.duplicated() #yinelenen değer kontrolu, satır satır bakıyor yani her şeyi aynı mı diye
+
+df.drop_duplicates()
+
+#değer değiştirme
+df.replace({"ali":"ali_isim"})
+
+data = {
+    "isim":[" ali","Ayse","mehmet","zeYnep","burak"],
+    "yas":[25,21,22,23,27],
+    "not":[80,90,75,95,85]
+}
+df = pd.DataFrame(data)
+df["isim"] = df["isim"].str.lower() #küçük harf yap
+df["isim"] = df["isim"].str.strip() #boşluktan kurtul
+df
+
+"""## Veri Dönüştürme"""
+
+data = {
+    "isim":["ali","ayşe","mehmet","zeynep","burak"],
+    "yas":[25,30,22,28,27],
+    "not":[80,90,75,95,85]
+}
+df = pd.DataFrame(data)
+df = df.sort_values(by = "not",ascending = False) #notlara göre sıralama
+
+#yeniden indeksleme
+df = df.reindex([0,1,2,3,4])
+df
+
+#tip dönüştürme
+df.info()
+df["not"] = df["not"].astype(float)
+df["yas"] = df["yas"].astype(str)
+df
+
+#kategorik veri ekle
+df["sehir"] = ["ankara","izmir","antalya","konya","istanbul"]
+df["sehir"] = df["sehir"].astype("category")
+df.info()
+
+"""## Gruplama ve Özetleme"""
+
+#temel gruplama
+data = {
+    "departman": ["IT","IT","HR","HR","Muhasebe","IT"],
+    "personel" : ["ali","ayşe","mehmet","zeynep","burak","can"],
+    "maaş" : [1222,1333,1444,1414,8666,1279]
+    }
+df = pd.DataFrame(data)
+df.groupby("departman")["maaş"].mean()
+
+#toplama, ortalama ve sayma
+df.groupby("departman")["maaş"].sum() #toplam maaş
+
+df.groupby("departman")["maaş"].count() #kişi sayısı
+
+# birden fazla sütuna göre gruplama
+data = {
+    "departman": ["IT","IT","HR","HR","Muhasebe","IT"],
+    "personel" : ["ali","ayşe","mehmet","zeynep","burak","can"],
+    "sehir" : ["Ankara","İstanbul","Rize","Rize","İstanbul","Rize"],
+    "maaş" : [1222,1333,1444,1414,8666,1279]
+    }
+df = pd.DataFrame(data)
+df.groupby(["departman","sehir"])["maaş"].mean()
+
+#agg()
+df.groupby("departman")["maaş"].agg(["min","max","mean"])
+
+"""## Birleştirme ve Bir Araya Getirme"""
+
+#merge
+df1 = pd.DataFrame({"id":[1,2,3],"isim":["Ali","Ayşe","Mehmet"]})
+df2 = pd.DataFrame({"id":[1,2,4],"şehir":["Ankara","İstanbul","İzmir"]})
+df_merge = pd.merge(df1,df2,on="id",how="inner") #ortak olan kayıtlar
+df_merge
+
+df_merge = pd.merge(df1,df2,on="id",how="left") #soldaki veriseti için tüm kayıtlar
+df_merge
+
+df_merge = pd.merge(df1,df2,on="id",how="right") #sağdaki veriseti için tüm kayıtlar
+df_merge
+
+#indeks bazlı birleştirme
+df1 = pd.DataFrame({"isim":["Ali","Ayşe","Mehmet"]},index=["a","b","c"])
+df2 = pd.DataFrame({"not": [85,90,75]},index=["a","b","d"])
+
+pd.merge(df1,df2,left_index=True,right_index=True,how="outer") # her iki tarafın tüm kayıtları gelir
