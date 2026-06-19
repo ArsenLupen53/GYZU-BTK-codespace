@@ -137,3 +137,14 @@ X_train, X_test, y_train, y_test =train_test_split(X, y, test_size=0.25, random_
 scaler = StandardScaler()
 X_train_scaled = scaler.fit_transform(X_train)
 X_test_scaled = scaler.transform(X_test)
+
+
+# model training
+# logistic regression modeli eğitimi
+log_reg_model = LogisticRegression(solver="liblinear")
+log_reg_model.fit(X_train_scaled, y_train)
+
+# knn modeli
+knn_model = KNeighborsClassifier(n_neighbors=5)
+knn_model.fit(X_train_scaled, y_train)
+
