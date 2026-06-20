@@ -27,7 +27,6 @@ Akış:
     5. logistic regression eğit
     6. performansı ölç
     7. confusion matrix ile değerlendirme
-    8. örnek tahminleri görselleştir
 
 gerekli kütüphaneleri kur:
 pip install scikit-learn scikit-image numpy matplotlib opencv-python
@@ -37,6 +36,7 @@ import os
 import cv2 # open cv görüntü işleme kütüphanesi
 import numpy as np
 import matplotlib.pyplot as plt
+import pandas as pd
 
 from sklearn.model_selection import train_test_split
 from sklearn.preprocessing import StandardScaler #ölçekleme
@@ -148,3 +148,65 @@ log_reg_model.fit(X_train_scaled, y_train)
 knn_model = KNeighborsClassifier(n_neighbors=5)
 knn_model.fit(X_train_scaled, y_train)
 
+# performans değerlendirme
+def evaluate_model(name,y_true,y_pred):
+    acc = accuracy_score(y_true, y_pred)
+    prec = precision_score(y_true, y_pred)
+    rec = recall_score(y_true, y_pred)
+    f1 = f1_score(y_true, y_pred)
+
+    print(f"{name} Modeli Değerlendirme Sonuçları:")
+    print(f"Accuracy: {acc:.4f}")
+    print(f"Precision: {prec:.4f}")
+    print(f"Recall: {rec:.4f}")
+    print(f"F1 Score: {f1:.4f}")
+    print("-" * 40)
+
+    return acc,prec,rec,f1
+y_pred_log_reg = log_reg_model.predict(X_test_scaled)
+y_pred_knn = knn_model.predict(X_test_scaled)
+
+log_reg_result = evaluate_model("Logistic Regression",y_test,y_pred_log_reg) # log regression sonuçları
+knn_result = evaluate_model("KNN",y_test,y_pred_knn) #knn sonuçları
+
+
+
+"""
+Logistic Regression Modeli Değerlendirme Sonuçları:
+Accuracy: 0.6924
+Precision: 0.6570
+Recall: 0.6767
+F1 Score: 0.6667
+----------------------------------------
+KNN Modeli Değerlendirme Sonuçları:
+Accuracy: 0.6652
+Precision: 0.6927
+Recall: 0.4733
+F1 Score: 0.5624
+"""
+
+# karşılaştırma tablosu
+comparison_df = pd.DataFrame(
+    [log_reg_result, knn_result],
+    columns= ["accuracy","precision","recall","f1"],
+    index = ["Logistic Regression", "KNN"]
+)
+
+print(comparison_df)
+
+# confusion matrix - logistic regression
+cm_log_reg = confusion_matrix(y_test, y_pred_log_reg)
+disp_log_reg = ConfusionMatrixDisplay(confusion_matrix=cm_log_reg, display_labels=["Benign", "Malignant"])
+
+plt.figure(figsize=(5,4))
+disp_log_reg.plot(cmap="Blues")
+plt.title("Logistic Regression Confusion Matrix")
+
+# confusion matrix - k nearest neighbor
+cn_knn = confusion_matrix(y_test, y_pred_knn)
+disp_knn = ConfusionMatrixDisplay(confusion_matrix=cn_knn, display_labels=["Benign", "Malignant"])
+
+plt.figure(figsize=(5,4))
+disp_knn.plot(cmap="Greens")
+plt.title("KNN Confusion Matrix")
+plt.show()
